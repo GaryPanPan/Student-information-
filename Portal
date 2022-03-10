@@ -1,0 +1,352 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _1004_Assignment_Project
+{
+    public class StudentPortal
+    {
+        static string ReadPasswordLine()
+        {
+            string pass = "";
+            ConsoleKeyInfo key;
+            do
+            {
+                key = Console.ReadKey(true);
+                if (key.Key != ConsoleKey.Enter)
+                {
+                    if (!(key.KeyChar < ' '))
+                    {
+                        pass += key.KeyChar;
+                        Console.Write("");
+                    }
+                    else if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                    {
+                        Console.Write(Convert.ToChar(ConsoleKey.Backspace));
+                        pass = pass.Remove(pass.Length - 1);
+                        Console.Write(" ");
+                        Console.Write(Convert.ToChar(ConsoleKey.Backspace));
+                    }
+                }
+            } while (key.Key != ConsoleKey.Enter);
+            return pass;
+        }
+
+
+
+        public static void StartReg(string filePath)
+        {
+            BinaryFormatter formatter;
+
+            //newstudent array list
+            string[] value1 = { "200493067", "200489076", "200518109", "200518663", "123456789" };
+
+            //password array list
+            string[] value = { "bdat1000", "bdat1001", "bdat1002", "bdat1003", "bdat1004", "bdat1005" };
+
+            //registered student array list
+            string[] values2 = { "200493067", "200518109", "200518663" };
+
+
+            Console.WriteLine("Enter your UserID below: ");
+            string user = Console.ReadLine();
+
+            Console.WriteLine("Enter your Password (non display) below: ");
+            string password = ReadPasswordLine();
+
+            if (value.Contains(password) && value1.Contains(user))
+            {
+
+                Console.WriteLine("\nSelect any of the options below:\n");
+                Console.WriteLine("New Registration: press a");
+                Console.WriteLine("Information Update: press b");
+                Console.WriteLine("Course Registration: press c");
+                Console.WriteLine("Time Table: press d");
+                string coursereg = "c";
+                string update = "b";
+                string newreg = "a";
+                string timetbl = "d";
+                string newstudent = Console.ReadLine();
+
+                try
+                {
+                    if (newstudent == newreg)
+                    {
+                        Console.WriteLine("Enter your studentID below: ");
+                        string regdstud = Console.ReadLine();
+                        if (!values2.Contains(regdstud) && value1.Contains(regdstud))
+                        {
+
+                            List<Student> students = new List<Student>();
+
+                            Student stud1 = new Student();
+
+                            Console.WriteLine("please enter your StudentID: ");
+                            stud1.ID = Convert.ToInt32((Console.ReadLine()));
+
+                            Console.WriteLine("please enter your First name: ");
+                            stud1.FirstName = Console.ReadLine()!;
+
+                            Console.WriteLine("please enter your Last name: ");
+                            stud1.LastName = Console.ReadLine()!;
+
+                            Console.WriteLine("Enter your date of birth (e.g. MM/DD/YYYY): ");
+                            stud1.DateOfBirth = Convert.ToDateTime(Console.ReadLine());
+
+                            Console.WriteLine("please enter your Email: ");
+                            stud1.Email = Console.ReadLine()!;
+
+                            Console.WriteLine("please enter your Address: ");
+                            stud1.Address = Console.ReadLine()!;
+
+                            Console.WriteLine("Thank you! ");
+
+                            students.Add(stud1);
+
+
+
+                            if (File.Exists(filePath))
+                                File.Delete(filePath);
+                            formatter = new BinaryFormatter();
+                            using (Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                            {
+                                formatter.Serialize(stream, students);
+                            }
+
+
+                            if (File.Exists(filePath))
+                            {
+                                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                                {
+                                    List<Student> student = (List<Student>)formatter.Deserialize(stream);
+                                    foreach (var stud in student)
+                                    {
+                                        Console.WriteLine("\nStudent Information: ");
+                                        Console.WriteLine($"ID: {stud.ID}, FirstName: {stud.FirstName}, LastName: {stud.LastName}, DateOfBirth: {stud.DateOfBirth}, Email: {stud.Email} Address:{stud.Address} ");
+                                    }
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("cannot proceed with request, you may go to information update ");
+                        }
+                    }
+                    else if (update == newstudent)
+                    {
+                        Console.WriteLine("Enter your studentID below: ");
+                        string regdstud = Console.ReadLine();
+                        if (values2.Contains(regdstud) && value1.Contains(user))
+                        {
+
+                            List<Student> students = new List<Student>();
+
+                            Student stud1 = new Student();
+
+                            Console.WriteLine("please enter your StudentID: ");
+                            stud1.ID = Convert.ToInt32((Console.ReadLine()));
+
+                            Console.WriteLine("please enter your First name: ");
+                            stud1.FirstName = Console.ReadLine()!;
+
+                            Console.WriteLine("please enter your Last name: ");
+                            stud1.LastName = Console.ReadLine()!;
+
+                            Console.WriteLine("Enter your date of birth (e.g. MM/DD/YYYY): ");
+                            stud1.DateOfBirth = Convert.ToDateTime(Console.ReadLine());
+
+                            Console.WriteLine("please enter your Email: ");
+                            stud1.Email = Console.ReadLine()!;
+
+                            Console.WriteLine("please enter your Address: ");
+                            stud1.Address = Console.ReadLine()!;
+
+                            Console.WriteLine("Thank you!\n ");
+
+                            students.Add(stud1);
+
+
+
+                            if (File.Exists(filePath))
+                                File.Delete(filePath);
+                            formatter = new BinaryFormatter();
+                            using (Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                            {
+                                formatter.Serialize(stream, students);
+                            }
+
+
+                            if (File.Exists(filePath))
+                            {
+                                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                                {
+                                    List<Student> student = (List<Student>)formatter.Deserialize(stream);
+                                    foreach (var stud in student)
+                                    {
+
+                                        Console.WriteLine("Student Information: ");
+                                        Console.WriteLine($"ID: {stud.ID}, FirstName: {stud.FirstName}, LastName: {stud.LastName}, DateOfBirth: {stud.DateOfBirth}, Email: {stud.Email} Address:{stud.Address} ");
+                                    }
+
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("information does not exist");
+                        }
+                    }
+                    else if (coursereg == newstudent)
+                    {
+                        Console.WriteLine("Enter your studentID below: ");
+                        string regdstud = Console.ReadLine();
+
+                        if (values2.Contains(regdstud) && value1.Contains(user))
+                        {
+
+                            List<Student> students = new List<Student>();
+
+                            Student stud1 = new Student();
+
+                            Console.WriteLine("select BDAT1000");
+                            stud1.course1 = Console.ReadLine();
+
+                            Console.WriteLine("select BDAT1001");
+                            stud1.course2 = Console.ReadLine()!;
+
+                            Console.WriteLine("select BDAT1002");
+                            stud1.course3 = Console.ReadLine()!;
+
+                            Console.WriteLine("select BDAT1003");
+                            stud1.course4 = Console.ReadLine();
+
+                            Console.WriteLine("select BDAT1004");
+                            stud1.course5 = Console.ReadLine()!;
+
+                            Console.WriteLine("select BDAT1005");
+                            stud1.course6 = Console.ReadLine()!;
+
+
+                            Console.WriteLine("Thank you!\n ");
+
+                            students.Add(stud1);
+
+                            if (File.Exists(filePath))
+                                File.Delete(filePath);
+                            formatter = new BinaryFormatter();
+                            using (Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                            {
+                                formatter.Serialize(stream, students);
+                            }
+
+
+                            if (File.Exists(filePath))
+                            {
+                                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                                {
+                                    List<Student> cours = (List<Student>)formatter.Deserialize(stream);
+                                    foreach (var subj in cours)
+                                    {
+                                        Console.WriteLine("Course Information: ");
+                                        Console.WriteLine($"COURSE1: {subj.course1}, COURSE2: {subj.course2}, COURSE3: {subj.course3}, COURSE4: {subj.course4}, COURSE5:{subj.course5}, COURSE6:{subj.course6} ");
+                                    }
+
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("information does not exist");
+                        }
+
+                    }
+                    else if (newstudent == timetbl)
+                    {
+                        Console.WriteLine("Enter your studentID below: ");
+                        string regdstud = Console.ReadLine();
+                        Console.WriteLine("\nSelect your class time table below:\n");
+                        Console.WriteLine("Time Table A: press a");
+                        Console.WriteLine("Time Table B: press b");
+                        Console.WriteLine("Time Table C: press c");
+                        Console.WriteLine("Time Table D: press d");
+                        Console.WriteLine("Time Table E: press e");
+                        string tta = "a";
+                        string ttb = "b";
+                        string ttc = "c";
+                        string ttd = "d";
+                        string tte = "e";
+                        string tt_input = Console.ReadLine();
+                        if (values2.Contains(regdstud) && tta == tt_input)
+                        {
+                            Console.WriteLine("BDAT1000: Mon(9am-11am)\nBDAT1001: Mon(1pm-3pm)");
+                            Console.WriteLine("BDAT1003: Tue(8am-1pm)");
+                            Console.WriteLine("BDAT1004: Wed(1pm-3pm)\nBDAT1002: Wed(4pm-7pm)");
+                            Console.WriteLine("BDAT1005: Thu(3pm-5pm)");
+                        }
+                        else if ((values2.Contains(regdstud) && ttb == tt_input))
+                        {
+                            Console.WriteLine("BDAT1000: Mon(8am-11am)");
+                            Console.WriteLine("BDAT1003: Tue(am-1pm)\nBDAT1001: Tue(1pm - 3pm)");
+                            Console.WriteLine("BDAT1004: Wed(1pm-3pm)");
+                            Console.WriteLine("BDAT1005: Fri(1pm-4pm)\nBDAT1002: Fri(5pm-8pm)");
+                        }
+                        else if ((values2.Contains(regdstud) && ttc == tt_input))
+                        {
+                            Console.WriteLine("BDAT1000: Mon(11am-1pm)");
+                            Console.WriteLine("BDAT1003: Tue(am-1pm)\nBDAT1002: Tue(3pm-5pm)");
+                            Console.WriteLine("BDAT1004: Wed(1pm-3pm)\nBDAT1001: Wed(1pm - 3pm)");
+                            Console.WriteLine("BDAT1005: Fri(3pm-5pm)");
+
+                        }
+                        else if ((values2.Contains(regdstud) && ttd == tt_input))
+                        {
+                            Console.WriteLine("BDAT1001: Mon(11am- 2pm)\nBDAT1002: Mon(3pm - 6pm)");
+                            Console.WriteLine("BDAT1003: Tue(6pm - 9pm)");
+                            Console.WriteLine("BDAT1000: Wed(3pm - 6pm)");
+                            Console.WriteLine("BDAT1005: Thu(5pm - 8pm)\nBDAT1004: Thu(7pm - 9pm)");
+                        }
+                        else if ((values2.Contains(regdstud) && tte == tt_input))
+                        {
+                            Console.WriteLine("BDAT1001: Mon(11am-2pm)");
+                            Console.WriteLine("BDAT1003: Tue(1pm-4pm)\nBDAT1002: Tue(6pm - 9pm)");
+                            Console.WriteLine("BDAT1004: Wed(3pm-6pm)");
+                            Console.WriteLine("BDAT1004: Thu(5pm-8pm)\nBDAT1002: Thu(7pm - 9pm)");
+                        }
+                        else
+                        {
+                            Console.WriteLine("cannot proceed with request");
+                        }
+
+                        //Console.WriteLine("Sorry! incorrect information ");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry! incorrect information ");
+                    }
+                }
+
+                catch
+                {
+                    Console.WriteLine("Error detected!");
+                }
+
+
+            }
+            else
+            {
+                Console.WriteLine("\n Sorry! Incorrect UserID and/or Password");
+            }
+        }
+    }
+}
+
+
+
